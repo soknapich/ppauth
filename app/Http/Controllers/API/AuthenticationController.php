@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,6 @@ class AuthenticationController extends Controller
                 'success' => true,
                 'message' => 'Successfully registered',
             ], 201);
-
         } catch (\Exception $e) {
             Log::error('Registration Error: ' . $e->getMessage());
 
@@ -97,7 +97,6 @@ class AuthenticationController extends Controller
                 'success' => false,
                 'message' => 'Unauthorized',
             ], 401);
-
         } catch (\Exception $e) {
             Log::error('Login Error: ' . $e->getMessage());
 
@@ -162,6 +161,28 @@ class AuthenticationController extends Controller
                 'response_code' => 500,
                 'status' => 'error',
                 'message' => 'An error occurred during logout',
+            ], 500);
+        }
+    }
+
+
+    public function findUser()
+    {
+        try {
+            $user = Auth::user();
+            return response()->json([
+                'success' => true,
+                'http_code' => 200,
+                'message' => 'Success',
+                'data' => $user,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('User List Error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'http_code' => 500,
+                'message' => 'Failed to fetch user list',
             ], 500);
         }
     }

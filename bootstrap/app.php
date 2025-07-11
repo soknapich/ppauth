@@ -1,9 +1,11 @@
 <?php
+
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Validation\ValidationException;
 
@@ -13,9 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__ . '/../routes/api.php',
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
+        then: function () {
+            Route::middleware(['auth:api'])->group(function () {
+                Route::prefix('api/visits')->group(__DIR__ . '/../routes/api/visit.php');
+            });
+        }
     )
     ->withMiddleware(function (Middleware $middleware): void {
-
+   
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -64,6 +71,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             //            $result = ['success' => false, 'http_code' => Response::HTTP_INTERNAL_SERVER_ERROR, 'error_code' => null, 'errors' => null, 'message'=> 'Unexpected error. Try later'];
-//            return response()->json($result, $result['http_code']);
+            //            return response()->json($result, $result['http_code']);
         });
     })->create();
